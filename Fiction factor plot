@@ -1,0 +1,37 @@
+PathName = 'D:\ACADEMIA\GEOSTICK\GeoStick_mat\Code\Data\Run1 Back\';
+
+%files that works so far)
+%Examples
+%names= ["Brun1_vel_t0005_t0020_back_00001";"Brun1_vel_t0230_t0350_back_00000"];
+
+names = ["Brun1_vel_t0005_t0020_back_00001";"Brun1_vel_t0050_t0110_back_00000_2";"Brun1_vel_t0230_t0350_back_00000";"Brun1_vel_t0230_t0350_back_00001";"Brun1_vel_t0230_t0350_back_00002_2";"Brun1_vel_t0470_t0590_back_00000_4"]
+s=size(names,1);
+
+%Results matrix
+M=zeros(s,3);
+
+%Read files:
+
+for i = 1:s;
+
+    g=names(i);    
+    filename = char(strcat('Results_', g));   
+    load(fullfile(PathName, filename));
+
+    %Friction factor (Cd_Drag) from results:
+    %Export values of Cd_Drag and time (start and end)
+    %1000 times to better visualization
+
+    drag = Results.Turbulence.Cd_Drag;
+    drag_ref=drag(15)*1000;
+
+    tstart = str2num(filename(20:23));    
+    tend = str2num(filename(26:29));
+    
+    M(i,:) = [tstart tend drag_ref];
+
+end
+
+%Plot
+f1=figure;
+plot(M(:,2),M(:,3),'-k')
